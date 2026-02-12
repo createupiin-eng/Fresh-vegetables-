@@ -1,0 +1,14 @@
+{
+  "name": "fresh-vegetable-market",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fun, modern vegetable website with Vercel serverless backend",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1"
+  }
+}
