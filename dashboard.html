@@ -1,219 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Market Dashboard | Fresh Veggies</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-    :root { 
-        --bg-dark: #050b14;
-        --glass: rgba(255, 255, 255, 0.05);
-        --border: rgba(255, 255, 255, 0.1);
-        --primary: #00e38e;
-        --secondary: #7cffb2;
-        --tomato: #ff6b6b;
-        --tomato-glow: #ffb2b2;
-        --text-main: #e8f5e9;
-        --text-muted: #b8c7c0;
-        --danger: #ff0000;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fresh Vegetable Market | Auth</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    * { box-sizing: border-box; user-select: none; }
+<style>
+:root{
+--bg:#0f2027;
+--bg2:#203a43;
+--primary:#00e38e;
+--secondary:#7cffb2;
+--danger:#ff6b6b;
+--glass:rgba(255,255,255,0.08);
+--border:rgba(255,255,255,0.15);
+--text:#fff;
+--muted:#b8c7c0;
+}
 
-    body { 
-        margin: 0; 
-        font-family: 'Poppins', sans-serif; 
-        background-color: var(--bg-dark);
-        background: radial-gradient(circle at 50% -20%, #1a2c25 0%, #050b14 80%);
-        color: var(--text-main);
-        min-height: 100vh; 
-        overflow-x: hidden;
-    }
+*{box-sizing:border-box;margin:0;padding:0}
 
-    /* === FLOATING VEGETABLES === */
-    .floating-veggies { position: fixed; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-    .veg-svg { position: absolute; width: 80px; height: 80px; opacity: 0.1; animation: floatAnim linear infinite; }
-    .v1 { top: 10%; left: 5%; animation-duration: 25s; width: 100px; fill: var(--primary); }
-    .v2 { top: 70%; right: 10%; animation-duration: 20s; animation-delay: -5s; width: 80px; fill: var(--tomato); }
-    .v3 { bottom: 15%; left: 15%; animation-duration: 30s; width: 120px; fill: var(--secondary); }
-    @keyframes floatAnim { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-50px) rotate(20deg); } 100% { transform: translateY(0) rotate(0deg); } }
+body{
+font-family:'Poppins',sans-serif;
+background:radial-gradient(circle at 10% 20%,var(--bg),var(--bg2));
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:15px;
+color:var(--text);
+}
 
-    /* === NAVBAR === */
-    .nav { 
-        display: flex; align-items: center; justify-content: space-between; 
-        padding: 15px 5%; backdrop-filter: blur(15px); background: rgba(5, 11, 20, 0.7); 
-        border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
-        animation: slideDown 0.8s ease-out;
-    }
-    .brand { font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .wallet-box { display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.05); padding: 8px 16px; border-radius: 50px; border: 1px solid var(--border); box-shadow: 0 0 15px rgba(0, 227, 142, 0.1); }
-    .wallet-label { font-size: 0.85rem; color: var(--text-muted); }
-    .wallet-amount { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+.container{
+width:100%;
+max-width:1000px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:40px;
+align-items:center;
+}
 
-    .logout-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 8px 18px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
-    .logout-btn:hover { background: var(--danger); color: #fff; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+.brand h1{
+font-size:3.5rem;
+line-height:1.1;
+background:linear-gradient(135deg,#fff 30%,var(--primary));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
 
-    /* === MAIN === */
-    .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 10; }
-    .welcome-text { font-size: 2rem; margin-bottom: 40px; text-align: center; animation: fadeIn 1.5s ease; }
-    .welcome-text span { color: var(--secondary); }
-    
-    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 900px; }
+.brand p{
+margin-top:20px;
+color:var(--muted);
+line-height:1.6;
+}
 
-    /* === CARDS === */
-    .market-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 30px; text-align: center; transition: all 0.4s; cursor: pointer; position: relative; overflow: hidden; }
-    
-    .card-pudina:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0, 227, 142, 0.2); }
-    .card-pudina .icon { font-size: 4rem; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(0, 227, 142, 0.4)); }
-    .card-pudina .btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #000; }
-    
-    .card-tomato:hover { transform: translateY(-10px); border-color: var(--tomato); box-shadow: 0 20px 40px rgba(255, 107, 107, 0.2); }
-    .card-tomato .icon { font-size: 4rem; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.4)); }
-    .card-tomato .btn { background: linear-gradient(135deg, var(--tomato), var(--tomato-glow)); color: #000; }
+.auth-card{
+background:var(--glass);
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+border-radius:25px;
+padding:35px 25px;
+position:relative;
+}
 
-    .card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
-    .card-desc { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
-    .action-btn { border: none; padding: 12px 30px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; }
+.tabs{
+display:flex;
+background:rgba(0,0,0,0.3);
+border-radius:15px;
+padding:5px;
+margin-bottom:25px;
+position:relative;
+}
 
-    /* === HACKER MODAL === */
-    .hacker-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; font-family: 'Share Tech Mono', monospace; color: #ff0000; text-align: center; padding: 20px; }
-    .hacker-box { border: 2px solid #ff0000; padding: 40px; background: #000; box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); animation: shake 0.5s infinite; max-width: 500px; }
-    .hacker-icon { font-size: 5rem; margin-bottom: 20px; }
-    .hacker-title { font-size: 2.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
-    .hacker-msg { font-size: 1.2rem; color: #fff; margin-bottom: 30px; }
-    .hacker-btn { background: #ff0000; color: #000; border: none; padding: 15px 40px; font-family: inherit; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-    .hacker-btn:hover { background: #fff; color: #ff0000; }
+.tab-btn{
+flex:1;
+text-align:center;
+padding:12px;
+cursor:pointer;
+font-weight:600;
+z-index:2;
+color:var(--muted);
+}
 
-    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes shake { 0% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, 0px); } 40% { transform: translate(1px, -1px); } 60% { transform: translate(-3px, 1px); } 80% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -2px); } }
+.tab-btn.active{
+color:#000;
+}
 
-    @media (max-width: 600px) { .nav { flex-direction: column; gap: 15px; } .grid-container { grid-template-columns: 1fr; } }
-  </style>
+.tab-indicator{
+position:absolute;
+top:5px;
+left:5px;
+width:calc(50% - 5px);
+height:calc(100% - 10px);
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+border-radius:12px;
+transition:0.3s;
+}
+
+.form-panel{
+display:none;
+}
+
+.form-panel.active{
+display:block;
+}
+
+.input-group{
+margin-bottom:18px;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+font-size:0.9rem;
+color:var(--muted);
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:12px;
+border:2px solid var(--border);
+background:rgba(255,255,255,0.05);
+color:#fff;
+font-size:1rem;
+outline:none;
+transition:0.3s;
+}
+
+input:focus{
+border-color:var(--primary);
+box-shadow:0 0 10px rgba(0,227,142,0.2);
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+font-weight:700;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:disabled{
+opacity:0.7;
+cursor:not-allowed;
+}
+
+.message{
+margin-top:15px;
+text-align:center;
+font-size:0.9rem;
+min-height:20px;
+}
+
+.success{color:var(--primary)}
+.error{color:var(--danger)}
+
+/* Mobile */
+@media(max-width:850px){
+.container{
+grid-template-columns:1fr;
+text-align:center;
+}
+.brand h1{
+font-size:2.5rem;
+}
+}
+</style>
 </head>
 <body>
 
-  <div class="floating-veggies">
-    <svg class="veg-svg v1" viewBox="0 0 512 512"><path d="M256 32C175 32 105 76 74 144c-45 8-80 46-80 94 0 53 43 96 96 96h10c-3 12-5 24-5 36 0 62 72 110 161 110s161-48 161-110c0-12-2-24-5-36h10c53 0 96-43 96-96 0-48-35-86-80-94-31-68-101-112-182-112z"/></svg>
-    <svg class="veg-svg v2" viewBox="0 0 512 512"><path d="M256 64C132.3 64 32 150 32 256s100.3 192 224 192 224-86 224-192S379.7 64 256 64z"/></svg>
-    <svg class="veg-svg v3" viewBox="0 0 512 512"><path d="M372 26c-9-9-23-11-34-5l-42 21c-5-7-12-12-21-12-11 0-21 7-25 17L30 357c-13 22-8 51 11 67l44 38c11 10 25 14 39 14 10 0 19-3 28-8l310-220c10-5 13-18 8-28-1-2-3-3-4-5l21-42c6-11 4-25-5-34l-21-21c-3-3-6-5-10-6z"/></svg>
-  </div>
+<div class="container">
 
-  <div class="hacker-modal" id="hackerModal">
-      <div class="hacker-box">
-          <div class="hacker-icon">☠️</div>
-          <div class="hacker-title">SYSTEM ALERT</div>
-          <div class="hacker-msg">
-              RIGHT CLICK DISABLED.<br>
-              SECURITY PROTOCOL ACTIVATED.<br>
-              IP ADDRESS LOGGED.
-          </div>
-          <button class="hacker-btn" onclick="closeHackerModal()">OK, I UNDERSTAND</button>
-      </div>
-  </div>
+<div class="brand">
+<h1>Fresh Vegetable Market</h1>
+<p>Khet se seedha ghar tak. Organic sabziyan trusted quality ke saath.</p>
+</div>
 
-  <div class="nav">
-    <div class="brand">Fresh Market</div>
-    <div class="wallet-box">
-        <span class="wallet-label">Balance:</span>
-        <span class="wallet-amount" id="wallet-display">Loading...</span>
-    </div>
-    <button class="logout-btn" onclick="logout()">LOGOUT</button>
-  </div>
+<div class="auth-card">
 
-  <div class="main">
-    <div class="welcome-text">
-        Welcome back, <span id="username-display">...</span>! 👋
-    </div>
+<div class="tabs">
+<div class="tab-indicator" id="indicator"></div>
+<div class="tab-btn active" onclick="switchTab('login')">Login</div>
+<div class="tab-btn" onclick="switchTab('signup')">Signup</div>
+</div>
 
-    <div class="grid-container">
-        <div class="market-card card-pudina" onclick="window.location.href='buy.html'">
-            <div class="icon">🥬</div>
-            <div class="card-title">Pudina Exchange</div>
-            <div class="card-desc">Buy fresh organic Pudina instantly. Best rates in the market.</div>
-            <button class="action-btn btn">Buy Pudina</button>
-        </div>
+<!-- LOGIN -->
+<div class="form-panel active" id="login-panel">
+<form id="loginForm">
+<div class="input-group">
+<label>Email</label>
+<input type="email" id="login-email" required>
+</div>
+<div class="input-group">
+<label>Password</label>
+<input type="password" id="login-password" required>
+</div>
+<button type="submit" id="loginBtn">Login</button>
+<div class="message" id="login-msg"></div>
+</form>
+</div>
 
-        <div class="market-card card-tomato" onclick="window.location.href='buy2.html'">
-            <div class="icon">🍅</div>
-            <div class="card-title">Red Tomato Deal</div>
-            <div class="card-desc">Premium red tomatoes. Direct farm to home delivery.</div>
-            <button class="action-btn btn">Buy Tomatoes</button>
-        </div>
-    </div>
-  </div>
+<!-- SIGNUP -->
+<div class="form-panel" id="signup-panel">
+<form id="signupForm">
+<div class="input-group">
+<label>Full Name</label>
+<input type="text" id="signup-name" required>
+</div>
+<div class="input-group">
+<label>Email</label>
+<input type="email" id="signup-email" required>
+</div>
+<div class="input-group">
+<label>Phone</label>
+<input type="tel" id="signup-phone" required>
+</div>
+<div class="input-group">
+<label>Password</label>
+<input type="password" id="signup-password" required>
+</div>
+<button type="submit" id="signupBtn">Create Account</button>
+<div class="message" id="signup-msg"></div>
+</form>
+</div>
 
-  <script>
-    // === 1. GET EMAIL FROM STORAGE (Set during Login) ===
-    // Dhyan dein: Login page par 'localStorage.setItem("user_email", email)' hona chahiye
-    const userEmail = localStorage.getItem('user_email');
-    
-    if (!userEmail) {
-        // Agar email nahi mila, wapas login pe bhejo
-        window.location.href = 'index.html'; 
-    }
+</div>
+</div>
 
-    // === 2. FETCH REAL DATA FROM API ===
-    async function loadRealData() {
-        try {
-            // Hum backend ko Email bhej rahe hain
-            const res = await fetch('/api/user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: userEmail })
-            });
+<script>
+const indicator=document.getElementById("indicator");
+const tabs=document.querySelectorAll(".tab-btn");
+const loginPanel=document.getElementById("login-panel");
+const signupPanel=document.getElementById("signup-panel");
 
-            const data = await res.json();
+function switchTab(tab){
+if(tab==="login"){
+indicator.style.transform="translateX(0)";
+tabs[0].classList.add("active");
+tabs[1].classList.remove("active");
+loginPanel.classList.add("active");
+signupPanel.classList.remove("active");
+}else{
+indicator.style.transform="translateX(100%)";
+tabs[1].classList.add("active");
+tabs[0].classList.remove("active");
+signupPanel.classList.add("active");
+loginPanel.classList.remove("active");
+}
+clearMessages();
+}
 
-            if (data.success) {
-                // Real Data Set karo
-                document.getElementById('username-display').textContent = data.user.full_name;
-                document.getElementById('wallet-display').textContent = '₹ ' + data.user.wallet_balance;
-            } else {
-                alert("User Data Error: " + data.message);
-                logout();
-            }
+function clearMessages(){
+document.getElementById("login-msg").textContent="";
+document.getElementById("signup-msg").textContent="";
+}
 
-        } catch (error) {
-            console.error("Connection Error:", error);
-            document.getElementById('wallet-display').textContent = "Error";
-        }
-    }
+/* LOGIN */
+document.getElementById("loginForm").addEventListener("submit",async(e)=>{
+e.preventDefault();
+const btn=document.getElementById("loginBtn");
+const msg=document.getElementById("login-msg");
+btn.disabled=true;
+msg.textContent="Processing...";
 
-    // Page load hote hi data mangwao
-    loadRealData();
+try{
+const res=await fetch("/api/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+email:document.getElementById("login-email").value.trim(),
+password:document.getElementById("login-password").value
+})
+});
 
-    function logout() {
-        localStorage.removeItem('user_email');
-        window.location.href = 'index.html';
-    }
+const data=await res.json();
 
-    // === 🛡️ SECURITY SYSTEM (Right Click Disabled) 🛡️ ===
-    const modal = document.getElementById('hackerModal');
+if(res.ok && data.success){
+msg.className="message success";
+msg.textContent="Login successful!";
+localStorage.setItem("user",JSON.stringify(data.user));
+setTimeout(()=>{window.location.href="/dashboard.html";},1000);
+}else{
+throw new Error(data.message);
+}
 
-    // Block Right Click
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        triggerHackerMode();
-    });
+}catch(err){
+msg.className="message error";
+msg.textContent=err.message;
+}
+btn.disabled=false;
+});
 
-    // Block Inspect Element Keys
-    document.addEventListener('keydown', (e) => {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-            e.preventDefault();
-            triggerHackerMode();
-        }
-    });
+/* SIGNUP */
+document.getElementById("signupForm").addEventListener("submit",async(e)=>{
+e.preventDefault();
+const btn=document.getElementById("signupBtn");
+const msg=document.getElementById("signup-msg");
+btn.disabled=true;
+msg.textContent="Creating account...";
 
-    function triggerHackerMode() {
-        modal.style.display = 'flex';
-    }
+try{
+const res=await fetch("/api/signup",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+full_name:document.getElementById("signup-name").value.trim(),
+email:document.getElementById("signup-email").value.trim(),
+phone:document.getElementById("signup-phone").value.trim(),
+password:document.getElementById("signup-password").value
+})
+});
 
-    function closeHackerModal() {
-        modal.style.display = 'none';
-    }
-  </script>
+const data=await res.json();
+
+if(res.ok && data.success){
+msg.className="message success";
+msg.textContent="Account created successfully!";
+setTimeout(()=>{switchTab("login");},1000);
+}else{
+throw new Error(data.message);
+}
+
+}catch(err){
+msg.className="message error";
+msg.textContent=err.message;
+}
+btn.disabled=false;
+});
+</script>
+
 </body>
 </html>
